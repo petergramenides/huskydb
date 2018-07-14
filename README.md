@@ -1,6 +1,6 @@
-![alt text](https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png "HuskyDB")
+![alt text](https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png "HuskyDB" | width=100)
 
-##Introduction
+## Introduction
 
 HuskyDB is a lightweight document-oriented database optimized for Windows :)
 It's written entirely in C++ and has no external dependencies. The target are
@@ -32,7 +32,7 @@ to add files. The most radical and useful feature of HuskyDB is that it automati
 updates and syncs all your files. Making a game? All of your assets are instantly avaliable
 when you start the database!
 
-###Example Code
+### Example Code
 
 ```
 #include <huskydb.cpp>
@@ -50,7 +50,7 @@ db.make_table("maps", "world-01");
 db.make_entry("maps", "world-01", "level.json", data);
 ```
 
-###Querying
+### Querying
 ************
 
 ```
@@ -64,7 +64,7 @@ vector<string> tables = db.query_tables("maps");
 unordered_map<string, char> files = db.query_files("maps", "world-01");
 ```
 
-##Future Updates
+## Future Updates
 ****************
 
 Please note that HuskyDB is still in its very early stages of development.
