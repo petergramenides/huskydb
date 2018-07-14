@@ -1,6 +1,6 @@
+<img src="https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png" width="250">
+
 # HuskyDB - Windows Native C++ NoSQL Database
-<br>
-<center><img src="https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png" width="250"></center>
 
 ## Introduction
 
