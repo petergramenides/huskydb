@@ -1,5 +1,5 @@
 .. image:: https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png?raw=true
-    :scale: 100%
+    :scale: 25%
     :height: 150px
 
 Introduction
@@ -38,7 +38,7 @@ when you start the database!
 Example Code
 ************
 
-.. code-block:: c++
+```
 #include <huskydb.cpp>
 
 // Starting the database
@@ -52,10 +52,12 @@ db.make_table("maps", "world-01");
 
 // Adding a file from a C++ object to the table
 db.make_entry("maps", "world-01", "level.json", data);
+```
 
 Querying
 ************
 
+```
 // Get all packages
 vector<string> packages = db.query_packages();
 
@@ -64,6 +66,7 @@ vector<string> tables = db.query_tables("maps");
 
 // Get files and priority index
 unordered_map<string, char> files = db.query_files("maps", "world-01");
+```
 
 Future Updates
 ****************
