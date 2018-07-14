@@ -1,7 +1,5 @@
 <img src="https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png" width="250">
 
-# HuskyDB - Windows Native C++ NoSQL Database
-
 ## Introduction
 
 HuskyDB is a lightweight document-oriented database optimized for Windows :)
