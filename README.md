@@ -1,9 +1,6 @@
-.. image:: https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png?raw=true
-    :scale: 25%
-    :height: 150px
+![alt text](https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png "HuskyDB")
 
-Introduction
-************
+##Introduction
 
 HuskyDB is a lightweight document-oriented database optimized for Windows :)
 It's written entirely in C++ and has no external dependencies. The target are
@@ -25,7 +22,7 @@ All features are offered through our library, which relies on the Windows API.
 
 - **windows native:** Although not ideal for most, at the moment, our library only supports
 the ©Microsoft Windows operating system. I am currently working on native versions for
-Mac and Linux as well as a ©Docker setup. Stay tuned for more updates!
+Mac and Linux as well as a Docker container. Stay tuned for more updates!
 
 - ** easily extendable:** HuskyDB is incredibly easy to extend and readable. All libraries
 we used are highly documented and all of our code is, equally, highly documented.
@@ -35,8 +32,7 @@ to add files. The most radical and useful feature of HuskyDB is that it automati
 updates and syncs all your files. Making a game? All of your assets are instantly avaliable
 when you start the database!
 
-Example Code
-************
+###Example Code
 
 ```
 #include <huskydb.cpp>
@@ -54,7 +50,7 @@ db.make_table("maps", "world-01");
 db.make_entry("maps", "world-01", "level.json", data);
 ```
 
-Querying
+###Querying
 ************
 
 ```
@@ -68,7 +64,7 @@ vector<string> tables = db.query_tables("maps");
 unordered_map<string, char> files = db.query_files("maps", "world-01");
 ```
 
-Future Updates
+##Future Updates
 ****************
 
 Please note that HuskyDB is still in its very early stages of development.
@@ -80,4 +76,4 @@ following updates soon:
 * Automated testing
 * Security features
 * Mac & Linux Native builds
-* ©Docker container
+* Docker container
