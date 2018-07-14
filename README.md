@@ -51,7 +51,6 @@ db.make_entry("maps", "world-01", "level.json", data);
 ```
 
 ### Querying
-************
 
 ```
 // Get all packages
