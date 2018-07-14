@@ -1,4 +1,4 @@
-<img src="https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png" width="200">
+<img src="https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png" width="300">
 
 ## Introduction
 
@@ -24,10 +24,10 @@ All features are offered through our library, which relies on the Windows API.
 the ©Microsoft Windows operating system. I am currently working on native versions for
 Mac and Linux as well as a Docker container. Stay tuned for more updates!
 
-- ** easily extendable:** HuskyDB is incredibly easy to extend and readable. All libraries
+- **easily extendable:** HuskyDB is incredibly easy to extend and readable. All libraries
 we used are highly documented and all of our code is, equally, highly documented.
 
-- ** automatically synced:** One of the most annoying features of most databases is having
+- **automatically synced:** One of the most annoying features of most databases is having
 to add files. The most radical and useful feature of HuskyDB is that it automatically
 updates and syncs all your files. Making a game? All of your assets are instantly avaliable
 when you start the database!
