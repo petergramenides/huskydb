@@ -1,1 +1,1 @@
-# huskydb
+# HuskyDB
