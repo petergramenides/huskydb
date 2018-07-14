@@ -19,6 +19,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.sln
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -326,6 +327,11 @@ __pycache__/
 
 # Ignore Visual Studio Project
 vs-project/
+.vs/
+Debug/
+HuskyDB/
+
+
 
 # OpenCover UI analysis results
 OpenCover/
