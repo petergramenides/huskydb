@@ -64,14 +64,13 @@ unordered_map<string, char> files = db.query_files("maps", "world-01");
 ```
 
 ## Additional Information
-****************
+
 You can read our entire documentation [here](https://github.com/petergramenides/huskydb/wiki/Documentation).
 
 Want to contribute? Send me and email at gramep@rpi.edu! Or, just make a
 branch and a pull request and I will review it.
 
 ## Future Updates
-****************
 
 Please note that HuskyDB is still in its very early stages of development.
 At times it may not be entirely stable and there may be bugs. Expect the
