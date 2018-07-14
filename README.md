@@ -3,7 +3,7 @@
 ## Introduction
 
 HuskyDB is a lightweight document-oriented database optimized for Windows :)
-It's written entirely in C++ and has no external dependencies. The target are
+It's written entirely in C++ and has no external dependencies. The target is
 small applications and video games that do not need large databases.
 
 HuskyDB is:
@@ -63,6 +63,13 @@ vector<string> tables = db.query_tables("maps");
 // Get files and priority index
 unordered_map<string, char> files = db.query_files("maps", "world-01");
 ```
+
+### Advanced
+****************
+[Documentation](https://github.com/petergramenides/huskydb/wiki/Documentation)
+
+Want to contribute? Send me and email at gramep@rpi.edu! Or, just make a
+branch and a pull request and I will review it.
 
 ## Future Updates
 ****************
