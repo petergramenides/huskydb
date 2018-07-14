@@ -1,4 +1,4 @@
-![alt text](https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png "HuskyDB" | width=100)
+<img src="https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png" width="48">
 
 ## Introduction
 
