@@ -1,4 +1,4 @@
-<img src="https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png" width="300">
+<img src="https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png" width="250">
 
 ## Introduction
 
