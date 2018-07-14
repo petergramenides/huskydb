@@ -64,7 +64,7 @@ vector<string> tables = db.query_tables("maps");
 unordered_map<string, char> files = db.query_files("maps", "world-01");
 ```
 
-### Advanced
+## Additional Information
 ****************
 You can read our entire documentation [here](https://github.com/petergramenides/huskydb/wiki/Documentation).
 
