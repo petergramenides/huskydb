@@ -11,7 +11,7 @@ HuskyDB is:
 - **lightweight:** The current source code has 500 lines of code, which is smaller than
 any NoSQL database I know. (please let me know if you find one) 
 
-- **document oriented:** Inspired by [TinyDB] (https://github.com/msiemens/tinydb), HuskyDB is document oriented and can store
+- **document oriented:** Inspired by [TinyDB](https://github.com/msiemens/tinydb), HuskyDB is document oriented and can store
 any kind of document. In addition, we offer document-based support for priority indexing.
 
 - **easy to use:** HuskyDB is designed to be very simple, efficient, and extendable. We
