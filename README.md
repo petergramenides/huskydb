@@ -9,7 +9,7 @@ small applications and video games that do not need large databases.
 HuskyDB is:
 
 - **lightweight:** HuskyDB was built to maximize efficiency and size. HuskyDB is 
-one of the smallest and fastest NoSQL databases (~800 lines code, ~500ms startup).
+one of the smallest and fastest NoSQL databases (~800 lines code).
 
 - **document oriented:** Inspired by [TinyDB](https://github.com/msiemens/tinydb), HuskyDB is document oriented and can store
 any kind of document. In addition, we offer document-based support for priority indexing and leverage os-level file caching.
@@ -77,21 +77,20 @@ Be sure to restart the database after making changes to the priority files. In c
 adding the ability to have this done without restarting the database.
 
 Note: For scaling applications, prioritization slows the startup process by ~600ms. It does not slow the database
-after startup. If you do not want this feature, it is disabled by default.
+after startup.
 
 ## Database Structure
 
-HuskyDB was designed with a very specific data management model. Many NoSQL databases are very unstructured, leading to decreased query times. HuskyDB adopts a hybrid model, we utilize a custom hierarchical structure to maximize query speeds and minimize transition from
+HuskyDB was designed with a very specific data management model. Many NoSQL databases are very unstructured, leading to increased query times. HuskyDB adopts a hybrid model, we utilize a custom hierarchical structure to maximize query speeds and minimize transition from
 conventional RDBMS SQL-based databases.
 
-<img src="https://github.com/petergramenides/huskydb/blob/master/img/huskydb-structure.JPG?raw=true" width="500">
+<img src="https://github.com/petergramenides/huskydb/blob/master/img/huskydb-structure.JPG?raw=true" width="800">
 
 ## Additional Information
 
-You can read our entire documentation [here](https://github.com/petergramenides/huskydb/wiki/Documentation).
+You can read our entire documentation [here](https://github.com/petergramenides/huskydb/tree/master/documentation).
 
-Want to contribute? Send me an email at gramep@rpi.edu! Or, just make a
-branch and a pull request and our team will review it.
+Want to contribute or make a suggestion? Send me an email at gramep@rpi.edu!
 
 ## Future Updates
 
