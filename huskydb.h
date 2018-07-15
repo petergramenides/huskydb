@@ -49,7 +49,24 @@ public:
 		{
 			cout << "[HuskyDB] Starting HuskyDB - NoSQL database." << endl;
 			db_path = input_path;
-			index();
+			index(false);
+		}
+		else {
+			cout << "[HuskyDB] Directory " << input_path << " is not valid." << endl;
+			cout << "[HuskyDB] Shutting down database." << endl;
+			Sleep(5000);
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	// Initialize NoSQL database (with prioritization setting)
+	huskydb(string input_path, bool toggle_pr)
+	{
+		if (folder_possible(input_path))
+		{
+			cout << "[HuskyDB] Starting HuskyDB - NoSQL database." << endl;
+			db_path = input_path;
+			index(toggle_pr);
 		}
 		else {
 			cout << "[HuskyDB] Directory " << input_path << " is not valid." << endl;
@@ -91,7 +108,7 @@ public:
 	}
 
 	// Index database in memory
-	void index();
+	void index(bool toggle_pr);
 
 	// Find package by name
 	package* query_package(string package_name);

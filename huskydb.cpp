@@ -25,7 +25,7 @@ namespace fs = std::experimental::filesystem;
 // PUBLIC FUNCTIONS
 
 // Index database in memory
-void huskydb::index()
+void huskydb::index(bool toggle_pr)
 {
 	using namespace std::chrono;
 
@@ -47,35 +47,44 @@ void huskydb::index()
 			vector<file*> table_files;
 
 			vector<Prioritize_t> prioritizations;
-			string priority_path = table_path + "/priority";
-			WIN32_FIND_DATA FindFileData;
-			HANDLE handle = FindFirstFile(priority_path.c_str(), &FindFileData);
-			bool found = handle != INVALID_HANDLE_VALUE;
-			if (found)
+			if (toggle_pr)
 			{
-				Prioritize(priority_path.c_str(), prioritizations);
-			}
-			else
-			{
-				FILE *pFile;
-				fopen_s(&pFile, priority_path.c_str(), "w");
-				fclose(pFile);
+				string priority_path = table_path + "/priority";
+				WIN32_FIND_DATA FindFileData;
+				HANDLE handle = FindFirstFile(priority_path.c_str(), &FindFileData);
+				bool found = handle != INVALID_HANDLE_VALUE;
+				if (found)
+				{
+					Prioritize(priority_path.c_str(), prioritizations);
+				}
+				else
+				{
+					FILE *pFile;
+					fopen_s(&pFile, priority_path.c_str(), "w");
+					fclose(pFile);
+				}
 			}
 			
 			for (size_t z = 0; z < files.size(); ++z)
 			{
 				string file_path = table_path + "/" + files[z];
-				// Get priority.
+
 				int priority_num = 0;
-				for (int i = 0; i < prioritizations.size(); i++)
+				if (toggle_pr)
 				{
-					if (prioritizations[i].fileName == files[z])
+					// Get priority.
+					for (int i = 0; i < prioritizations.size(); i++)
 					{
-						priority_num = prioritizations[i].prioritize;
-						break;
+						if (prioritizations[i].fileName == files[z])
+						{
+							priority_num = prioritizations[i].prioritize;
+							break;
+						}
 					}
 				}
+
 				file* fl = new file(files[z], file_path, priority_num, tbl);
+
 				table_files.push_back(fl);
 				_files.push_back(fl);
 			}

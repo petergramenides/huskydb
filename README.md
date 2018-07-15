@@ -73,6 +73,11 @@ huskydb("/path/to/db", true);
 ```
 file_name.xxx=#;
 ```
+Be sure to restart the database after making changes to the priority files. In consecutive releases, we will be
+adding the ability to have this done without restarting the database.
+
+Note: For scaling applications, prioritization slows the startup process by ~600ms. It does not slow the database
+after startup. If you do not want this feature, it is disabled by default.
 
 ## Additional Information
 
@@ -96,4 +101,6 @@ following updates soon:
 
 ## Special Thanks
 
+```
 Daniel Parente: For working with me late at night to concepualize, build, and debug HuskyDB.
+```
