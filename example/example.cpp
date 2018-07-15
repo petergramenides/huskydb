@@ -45,7 +45,7 @@ int main()
 
 
 	// Delete file from database
-	//db.delete_file("package", "images", "test.png");
+	db.delete_file("package", "images", "test.png");
 
 	cin.get();
 }
