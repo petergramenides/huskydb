@@ -20,11 +20,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "file.h"
-#include "package.h"
+//#include "package.h"
 #include <vector>
 #include <string>
 
 using namespace std;
+
+class package;
 
 class table
 {
