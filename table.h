@@ -20,7 +20,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "file.h"
-//#include "package.h"
 #include <vector>
 #include <string>
 
@@ -35,7 +34,7 @@ public:
 	{
 		folder_name = _fname;
 		folder_path = _fpath;
-		package = _package;
+		pkg = _package;
 		docs = _docs;
 	}
 	friend class huskydb;
@@ -43,18 +42,17 @@ public:
 	friend class file;
 	~table()
 	{
-		for (size_t x = 0; x < docs.size(); ++x)
-		{
-			delete docs[x];
-		} docs.clear();
+		for (file* obj : docs)
+			delete obj; 
+		docs.clear();
 	}
 	string get_name() { return folder_name; }
 	void set_name(string _name) { folder_name = _name; }
 	string get_path() { return folder_path; }
 	void set_path(string _path) { folder_path = _path; }
-	package* get_package() { return package; }
-	void set_package(package* _package) { package = _package; }
-	vector<file*> get_file() { return docs; }
+	package* get_package() { return pkg; }
+	void set_package(package* _package) { pkg = _package; }
+	vector<file*> get_files() { return docs; }
 	void set_files(vector<file*> _docs) { docs = _docs; }
 	void add_file(file* file) { docs.push_back(file); }
 	vector<file*> find_file(size_t priority)
@@ -92,7 +90,7 @@ public:
 private:
 	string folder_name;
 	string folder_path;
-	package* package;
+	package* pkg;
 	vector<file*> docs;
 
 };

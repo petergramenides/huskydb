@@ -63,6 +63,16 @@ public:
 	string get_name() { return package_name; }
 	void set_name(string _name) { package_name = _name; }
 	void add_table(table* _table) { tables.push_back(_table); }
+	void remove_table(string table_name)
+	{
+		for (size_t x = 0; x < tables.size(); ++x)
+		{
+			if (tables[x]->get_name() == table_name)
+			{
+				tables.erase(tables.begin() + x);
+			}
+		}
+	}
 
 private:
 	string package_path;
