@@ -24,27 +24,88 @@ namespace fs = std::experimental::filesystem;
 
 // PUBLIC FUNCTIONS
 
+// Initialize NoSQL database
+CHuskyDB::CHuskyDB(string input_path)
+{
+	if (FolderPossible(input_path))
+	{
+		cout << "[HuskyDB] Starting HuskyDB - NoSQL database." << endl;
+		m_DbPath = input_path;
+		Index(false);
+	}
+	else {
+		cout << "[HuskyDB] Directory " << input_path << " is not valid." << endl;
+		cout << "[HuskyDB] Shutting down database." << endl;
+		Sleep(5000);
+		exit(EXIT_FAILURE);
+	}
+}
+
+// Initialize NoSQL database (with prioritization setting)
+CHuskyDB::CHuskyDB(string input_path, bool toggle_pr)
+{
+	if (FolderPossible(input_path))
+	{
+		cout << "[HuskyDB] Starting HuskyDB - NoSQL database." << endl;
+		m_DbPath = input_path;
+		Index(toggle_pr);
+	}
+	else {
+		cout << "[HuskyDB] Directory " << input_path << " is not valid." << endl;
+		cout << "[HuskyDB] Shutting down database." << endl;
+		Sleep(5000);
+		exit(EXIT_FAILURE);
+	}
+}
+
+// Deconstruct NoSQL database
+CHuskyDB::~CHuskyDB()
+{
+	// Delete all file objects from memory
+	for (size_t x = 0; x < m_Files.size(); ++x)
+	{
+		delete m_Files[x];
+	}
+
+	// Delete all table objects from memory
+	for (size_t x = 0; x < m_Tables.size(); ++x)
+	{
+		delete m_Tables[x];
+	}
+
+	// Delete all package objects from memory
+	for (size_t x = 0; x < m_Packages.size(); ++x)
+	{
+		delete m_Packages[x];
+	}
+
+	// Clear pointers
+	m_Files.clear();
+	m_Tables.clear();
+	m_Packages.clear();
+}
+
 // Index database in memory
-void huskydb::index(bool toggle_pr)
+void CHuskyDB::Index(bool toggle_pr)
 {
 	using namespace std::chrono;
 
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
-	vector<string> package_names = get_folders(db_path);
+	vector<string> package_names = GetFolders(m_DbPath);
 	for (size_t x = 0; x < package_names.size(); ++x)
 	{
-		vector<table*> pkg_tables;
-		string path = db_path + "/" + package_names[x];
-		package* pkg = new package(package_names[x], path, empty_tables);
-		vector<string> tables = get_folders(path);
+		vector<CTable*> pkg_tables;
+		string path = m_DbPath + "/" + package_names[x];
+		CPackage* pkg = new CPackage(package_names[x], path, m_EmptyTables);
+		vector<string> tables = GetFolders(path);
 
 		for (size_t y = 0; y < tables.size(); ++y)
 		{
 			string table_path = path + "/" + tables[y];
-			vector<string> files = get_files(table_path);
+			vector<string> files = GetFiles(table_path);
 
-			table* tbl = new table(tables[y], table_path, pkg, empty_files);
-			vector<file*> table_files;
+			CTable* tbl = new CTable(tables[y], table_path, pkg, m_EmptyFiles);
+			vector<CFile*> table_files;
 
 			vector<Prioritize_t> prioritizations;
 			if (toggle_pr)
@@ -83,110 +144,110 @@ void huskydb::index(bool toggle_pr)
 					}
 				}
 
-				file* fl = new file(files[z], file_path, priority_num, tbl);
+				CFile* fl = new CFile(files[z], file_path, priority_num, tbl);
 
 				table_files.push_back(fl);
-				_files.push_back(fl);
+				m_Files.push_back(fl);
 			}
 
-			tbl->set_files(table_files);
+			tbl->SetFiles(table_files);
 			pkg_tables.push_back(tbl);
-			_tables.push_back(tbl);
+			m_Tables.push_back(tbl);
 		}
 
-		pkg->set_tables(pkg_tables);
-		_packages.push_back(pkg);
+		pkg->SetTables(pkg_tables);
+		m_Packages.push_back(pkg);
 	}
 
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	auto duration = duration_cast<microseconds>(t2 - t1).count();
 	cout << "[HuskyDB] Database indexed in " << duration << "ms." << endl;
-	cout << "[HuskyDB] # of packages: " << _packages.size() << endl;
-	cout << "[HuskyDB] # of tables: " << _tables.size() << endl;
-	cout << "[HuskyDB] # of files: " << _files.size() << endl;
+	cout << "[HuskyDB] # of packages: " << m_Packages.size() << endl;
+	cout << "[HuskyDB] # of tables: " << m_Tables.size() << endl;
+	cout << "[HuskyDB] # of files: " << m_Files.size() << endl;
 }
 
-package* huskydb::query_package(string package_name)
+CPackage* CHuskyDB::QueryPackage(string package_name)
 {
-	for (size_t x = 0; x < _packages.size(); ++x)
+	for (size_t x = 0; x < m_Packages.size(); ++x)
 	{
-		if (_packages[x]->get_name() == package_name)
+		if (m_Packages[x]->GetName() == package_name)
 		{
-			return _packages[x];
+			return m_Packages[x];
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
-table* huskydb::query_table(string table_name)
+CTable* CHuskyDB::QueryTable(string table_name)
 {
-	for (size_t x = 0; x < _tables.size(); ++x)
+	for (size_t x = 0; x < m_Tables.size(); ++x)
 	{
-		if (_tables[x]->get_name() == table_name)
+		if (m_Tables[x]->GetName() == table_name)
 		{
-			return _tables[x];
+			return m_Tables[x];
 		}
 	}
 
-return nullptr;
+	return NULL;
 }
 
-table* huskydb::query_table(string package_name, string table_name)
+CTable* CHuskyDB::QueryTable(string package_name, string table_name)
 {
-	package* pkg = query_package(package_name);
-	table* table = pkg->find_table(table_name);
+	CPackage* pkg = QueryPackage(package_name);
+	CTable* table = pkg->FindTable(table_name);
 	return table;
 }
 
 // Make package
-bool huskydb::make_package(string package_name)
+bool CHuskyDB::MakePackage(string package_name)
 {
-	string package_path = db_path;
-	if (!folder_possible(package_path))
+	string package_path = m_DbPath;
+	if (!FolderPossible(package_path))
 	{
 		return false;
 	}
 	else {
-		make_folder(db_path, package_name);
-		package* pkg = new package(package_name, db_path, empty_tables);
-		_packages.push_back(pkg);
+		MakeFolder(m_DbPath, package_name);
+		CPackage* pkg = new CPackage(package_name, m_DbPath, m_EmptyTables);
+		m_Packages.push_back(pkg);
 		return true;
 	} return false;
 }
 
 // Make table
-bool huskydb::make_table(string package_name, string table_name)
+bool CHuskyDB::MakeTable(string package_name, string table_name)
 {
-	string table_path = db_path + "/" + package_name;
-	if (!folder_possible(table_path))
+	string table_path = m_DbPath + "/" + package_name;
+	if (!FolderPossible(table_path))
 	{
 		return false;
 	}
 	else {
-		make_folder(table_path, table_name);
-		package* pkg = query_package(package_name);
-		table* tbl = new table(table_name, table_path, pkg, empty_files);
-		pkg->add_table(tbl);
-		_tables.push_back(tbl);
+		MakeFolder(table_path, table_name);
+		CPackage* pkg = QueryPackage(package_name);
+		CTable* tbl = new CTable(table_name, table_path, pkg, m_EmptyFiles);
+		pkg->AddTable(tbl);
+		m_Tables.push_back(tbl);
 		return true;
 	} return false;
 }
 
 // Make normal file from string
-bool huskydb::make_file(string package_name, string table_name, string file_name, string data, size_t priority)
+bool CHuskyDB::MakeFile(string package_name, string table_name, string file_name, string data, size_t priority)
 {
-	string file_path = db_path + "/" + package_name + "/" + table_name + "/" + file_name;
-	bool response = file_possible(file_path);
+	string file_path = m_DbPath + "/" + package_name + "/" + table_name + "/" + file_name;
+	bool response = FilePossible(file_path);
 	if (response)
 	{
 		ofstream new_file(file_path);
 		new_file << data << endl;
-		package* pkg = query_package(package_name);
-		table* tbl = pkg->find_table(table_name);
-		file* fl = new file(file_name, file_path, priority, tbl);
-		tbl->add_file(fl);
-		_files.push_back(fl);
+		CPackage* pkg = QueryPackage(package_name);
+		CTable* tbl = pkg->FindTable(table_name);
+		CFile* fl = new CFile(file_name, file_path, priority, tbl);
+		tbl->AddFile(fl);
+		m_Files.push_back(fl);
 		//index();
 		return true;
 	}
@@ -196,9 +257,9 @@ bool huskydb::make_file(string package_name, string table_name, string file_name
 }
 
 // Append data to file from string (can be used for large files)
-bool huskydb::append_file(string package_name, string table_name, string file_name, vector<string> data)
+bool CHuskyDB::AppendFile(string package_name, string table_name, string file_name, vector<string> data)
 {
-	string file_path = db_path + "/" + package_name + "/" + table_name + "/" + file_name;
+	string file_path = m_DbPath + "/" + package_name + "/" + table_name + "/" + file_name;
 	ofstream file(file_path, ios_base::app | ios_base::out);
 
 	if (!file)
@@ -216,36 +277,36 @@ bool huskydb::append_file(string package_name, string table_name, string file_na
 }
 
 // Delete package if it exists including all content (tables, files, etc.)
-bool huskydb::delete_package(string package_name)
+bool CHuskyDB::DeletePackage(string package_name)
 {
-	string path = db_path + "/" + package_name;
-	if (folder_possible(path))
+	string path = m_DbPath + "/" + package_name;
+	if (FolderPossible(path))
 	{
-		package* pkg = query_package(package_name);
-		vector<table*> tables = pkg->get_tables();
+		CPackage* pkg = QueryPackage(package_name);
+		vector<CTable*> tables = pkg->GetTables();
 		if (tables.size() > 0)
 		{
 			for (size_t x = 0; x < tables.size(); ++x)
 			{
-				for (size_t y = 0; y < _tables.size(); ++y)
+				for (size_t y = 0; y < m_Tables.size(); ++y)
 				{
-					if (tables[x]->get_name() == _tables[y]->get_name())
+					if (tables[x]->GetName() == m_Tables[y]->GetName())
 					{
-						_tables.erase(_tables.begin() + y);
+						m_Tables.erase(m_Tables.begin() + y);
 					}
 				}
 
 			}
 		}
 
-		for (size_t x = 0; x < _packages.size(); ++x)
+		for (size_t x = 0; x < m_Packages.size(); ++x)
 		{
-			if (_packages[x]->get_name() == package_name)
+			if (m_Packages[x]->GetName() == package_name)
 			{
-				_packages.erase(_packages.begin() + x);
+				m_Packages.erase(m_Packages.begin() + x);
 			}
 		}
-		delete_folder(path);
+		DeleteFolder(path);
 		delete pkg;
 		return true;
 	}
@@ -258,23 +319,23 @@ bool huskydb::delete_package(string package_name)
 }
 
 // Delete table if it exists including all content
-bool huskydb::delete_table(string package_name, string table_name)
+bool CHuskyDB::DeleteTable(string package_name, string table_name)
 {
-	string path = db_path + "/" + package_name + "/" + table_name;
-	if (folder_possible(path))
+	string path = m_DbPath + "/" + package_name + "/" + table_name;
+	if (FolderPossible(path))
 	{
-		package* pkg = query_package(package_name);
-		pkg->remove_table(table_name);
+		CPackage* pkg = QueryPackage(package_name);
+		pkg->RemoveTable(table_name);
 
-		for (size_t x = 0; x < _tables.size(); ++x)
+		for (size_t x = 0; x < m_Tables.size(); ++x)
 		{
-			if (_tables[x]->get_name() == table_name)
+			if (m_Tables[x]->GetName() == table_name)
 			{
-				_tables.erase(_tables.begin() + x);
+				m_Tables.erase(m_Tables.begin() + x);
 			}
 		}
-		delete_folder(path);
-		table* tbl = query_table(table_name, package_name);
+		DeleteFolder(path);
+		CTable* tbl = QueryTable(table_name, package_name);
 		delete tbl;
 		return true;
 	}
@@ -287,37 +348,36 @@ bool huskydb::delete_table(string package_name, string table_name)
 }
 
 // Delete individual file
-bool huskydb::delete_file(string package_name, string table_name, string file_name)
+bool CHuskyDB::DeleteFile(string package_name, string table_name, string file_name)
 {
-	string full_path = db_path + "/" + package_name + "/" + table_name + "/" + file_name;
-	string path = db_path + "/" + package_name + "/" + table_name;
-	if (file_possible(full_path))
+	string full_path = m_DbPath + "/" + package_name + "/" + table_name + "/" + file_name;
+	string path = m_DbPath + "/" + package_name + "/" + table_name;
+	if (FilePossible(full_path))
 	{
-		table* tbl = query_table(package_name, table_name);
-		file* file = tbl->find_file(file_name);
-		for (size_t x = 0; x < _files.size(); ++x)
+		CTable* tbl = QueryTable(package_name, table_name);
+		CFile* file = tbl->FindFile(file_name);
+		for (size_t x = 0; x < m_Files.size(); ++x)
 		{
-			if (_files[x]->get_name() == file_name)
+			if (m_Files[x]->GetName() == file_name)
 			{
-				_files.erase(_files.begin() + x);
+				m_Files.erase(m_Files.begin() + x);
 			}
 		}
-		delete_file(path, file_name);
-		tbl->remove_file(file_name);
+		DeleteFile(path, file_name);
+		tbl->RemoveFile(file_name);
 		delete file;
+
 		return true;
 	}
-	else
-	{
-		return false;
-	} return false;
+	
+	return false;
 }
 
 // PRIVATE INTERNAL FUNCTIONS
 
 
 // Checks if a folder already exists
-bool huskydb::folder_possible(string &directory)
+bool CHuskyDB::FolderPossible(string &directory)
 {
 	DWORD ftyp = GetFileAttributesA(directory.c_str());
 	if (ftyp == INVALID_FILE_ATTRIBUTES)
@@ -332,7 +392,7 @@ bool huskydb::folder_possible(string &directory)
 }
 
 // Checks if a file already exists
-bool huskydb::file_possible(string &directory)
+bool CHuskyDB::FilePossible(string &directory)
 {
 	ifstream dir(directory);
 	if (!dir)
@@ -345,7 +405,7 @@ bool huskydb::file_possible(string &directory)
 }
 
 // Get elements in directory based on abstract (file or folder)
-void huskydb::get_elements(vector<string> &files, string &search_path, string abstract)
+void CHuskyDB::GetElements(vector<string> &files, string &search_path, string abstract)
 {
 	WIN32_FIND_DATA fd;
 	HANDLE hFind = ::FindFirstFile(search_path.c_str(), &fd);
@@ -374,37 +434,37 @@ void huskydb::get_elements(vector<string> &files, string &search_path, string ab
 }
 
 // Get folders in directory
-vector<string> huskydb::get_folders(string &directory)
+vector<string> CHuskyDB::GetFolders(string &directory)
 {
 	vector<string> folders;
 	string search_path = directory + "/*.*";
-	get_elements(folders, search_path, "folder");
+	GetElements(folders, search_path, "folder");
 	return folders;
 }
 
 // Get files in directory with all file extensions
-vector<string> huskydb::get_files(string &directory)
+vector<string> CHuskyDB::GetFiles(string &directory)
 {
 	vector<string> files;
 	string search_path = directory + "/*.*";
-	get_elements(files, search_path, "file");
+	GetElements(files, search_path, "file");
 	return files;
 }
 
 // Get files in directory with specific file extension
-vector<string> huskydb::get_files(string &directory, string &extension)
+vector<string> CHuskyDB::GetFiles(string &directory, string &extension)
 {
 	vector<string> files;
 	string search_path = directory + "/*." + extension + "*";
-	get_elements(files, search_path, "file");
+	GetElements(files, search_path, "file");
 	return files;
 }
 
 // Make folder in directory if it does not exist
-bool huskydb::make_folder(string &directory, string &folder_name)
+bool CHuskyDB::MakeFolder(string &directory, string &folder_name)
 {
 	string path = directory + "/" + folder_name;
-	bool response = folder_possible(path);
+	bool response = FolderPossible(path);
 	if (!response)
 	{
 		fs::create_directory(path);
@@ -422,7 +482,7 @@ bool huskydb::make_folder(string &directory, string &folder_name)
 }
 
 // Recursively delete folder if it exists
-bool huskydb::delete_folder(string &directory)
+bool CHuskyDB::DeleteFolder(string &directory)
 {
 	std::uintmax_t n = fs::remove_all(directory);
 	//index();
@@ -431,7 +491,7 @@ bool huskydb::delete_folder(string &directory)
 }
 
 // Delete file if it exists
-bool huskydb::delete_file(string &directory, string &file_name)
+bool CHuskyDB::DeleteFile(string &directory, string &file_name)
 {
 	string full_path = directory + "/" + file_name;
 	int response = remove(full_path.c_str());
