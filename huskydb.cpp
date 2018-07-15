@@ -44,7 +44,7 @@ void huskydb::index()
 
 			table* tbl = new table(tables[y], table_path, pkg, empty_files);
 			vector<file*> table_files;
-				
+
 			for (size_t z = 0; z < files.size(); ++z)
 			{
 				string file_path = table_path + "/" + files[z];
@@ -53,7 +53,7 @@ void huskydb::index()
 				_files.push_back(fl);
 			}
 
-			tbl->set_child(table_files);
+			tbl->set_files(table_files);
 			pkg_tables.push_back(tbl);
 			_tables.push_back(tbl);
 		}
@@ -70,39 +70,93 @@ void huskydb::index()
 	cout << "[HuskyDB] # of files: " << _files.size() << endl;
 }
 
+package* huskydb::query_package(string package_name)
+{
+	for (size_t x = 0; x < _packages.size(); ++x)
+	{
+		if (_packages[x]->get_name() == package_name)
+		{
+			return _packages[x];
+		}
+	}
+
+	return nullptr;
+}
+
+table* huskydb::query_table(string table_name)
+{
+	for (size_t x = 0; x < _tables.size(); ++x)
+	{
+		if (_tables[x]->get_name() == table_name)
+		{
+			return _tables[x];
+		}
+	}
+
+return nullptr;
+}
+
+table* huskydb::query_table(string table_name, string package_name)
+{
+	package* pkg = query_package(package_name);
+	table* table = pkg->find_table(table_name);
+	return table;
+}
+
 // Make package
 bool huskydb::make_package(string package_name)
 {
-	return make_folder(db_path, package_name);
+	string package_path = db_path;
+	if (!folder_possible(package_path))
+	{
+		return false;
+	}
+	else {
+		make_folder(db_path, package_name);
+		package* pkg = new package(package_name, db_path, empty_tables);
+		_packages.push_back(pkg);
+		return true;
+	} return false;
 }
 
 // Make table
 bool huskydb::make_table(string package_name, string table_name)
 {
 	string table_path = db_path + "/" + package_name;
-	return make_folder(table_path, table_name);
+	if (!folder_possible(table_path))
+	{
+		return false;
+	}
+	else {
+		make_folder(table_path, table_name);
+		package* pkg = query_package(package_name);
+		table* tbl = new table(table_name, table_path, pkg, empty_files);
+		pkg->add_table(tbl);
+		_tables.push_back(tbl);
+		return true;
+	} return false;
 }
 
 // Make normal file from string
-bool huskydb::make_file(string package_name, string table_name, string file_name, string data)
+bool huskydb::make_file(string package_name, string table_name, string file_name, string data, size_t priority)
 {
 	string file_path = db_path + "/" + package_name + "/" + table_name + "/" + file_name;
-	bool response = file_exists(file_path);
+	bool response = file_possible(file_path);
 	if (response)
 	{
 		ofstream new_file(file_path);
 		new_file << data << endl;
+		package* pkg = query_package(package_name);
+		table* tbl = pkg->find_table(table_name);
+		file* fl = new file(file_name, file_path, priority, tbl);
+		tbl->add_file(fl);
+		_files.push_back(fl);
 		//index();
-		cout << "[HuskyDB] Success: file " << file_name << " created in database." << endl;
 		return true;
 	}
-	else
-	{
-		cout << "[HuskyDB] Error: " << file_path << " already exists." << endl;
+	else {
 		return false;
-	}
-
-	return false;
+	} return false;
 }
 
 // Append data to file from string (can be used for large files)
@@ -113,7 +167,6 @@ bool huskydb::append_file(string package_name, string table_name, string file_na
 
 	if (!file)
 	{
-		cout << "[HuskyDB] Error: " << file_path << " is not a valid directory." << std::endl;
 		return false;
 	}
 	else
@@ -123,23 +176,45 @@ bool huskydb::append_file(string package_name, string table_name, string file_na
 			file << data[x] << endl;
 		}
 		return true;
-	}
-
-	return false;
+	} return false;
 }
 
 // Delete package if it exists including all content (tables, files, etc.)
 bool huskydb::delete_package(string package_name)
 {
 	string path = db_path + "/" + package_name;
-	if (folder_exists(path))
+	if (folder_possible(path))
 	{
+		package* pkg = query_package(package_name);
+		vector<table*> tables = pkg->get_tables();
+		if (tables.size() > 0)
+		{
+			for (size_t x = 0; x < tables.size(); ++x)
+			{
+				for (size_t y = 0; y < _tables.size(); ++y)
+				{
+					if (tables[x]->get_name() == _tables[y]->get_name())
+					{
+						_tables.erase(_tables.begin() + y);
+					}
+				}
+
+			}
+		}
+
+		for (size_t x = 0; x < _packages.size(); ++x)
+		{
+			if (_packages[x]->get_name() == package_name)
+			{
+				_packages.erase(_packages.begin() + x);
+			}
+		}
 		delete_folder(path);
+		delete pkg;
 		return true;
 	}
 	else
 	{
-		cout << "[HuskyDB] Error: " << path << " is not a valid directory." << std::endl;
 		return false;
 	}
 
@@ -150,14 +225,25 @@ bool huskydb::delete_package(string package_name)
 bool huskydb::delete_table(string package_name, string table_name)
 {
 	string path = db_path + "/" + package_name + "/" + table_name;
-	if (folder_exists(path))
+	if (folder_possible(path))
 	{
+		package* pkg = query_package(package_name);
+		pkg->remove_table(table_name);
+
+		for (size_t x = 0; x < _tables.size(); ++x)
+		{
+			if (_tables[x]->get_name() == table_name)
+			{
+				_tables.erase(_tables.begin() + x);
+			}
+		}
 		delete_folder(path);
+		table* tbl = query_table(table_name, package_name);
+		delete tbl;
 		return true;
 	}
 	else
 	{
-		cout << "[HuskyDB] Error: " << path << " is not a valid directory." << std::endl;
 		return false;
 	}
 
@@ -169,44 +255,48 @@ bool huskydb::delete_file(string package_name, string table_name, string file_na
 {
 	string full_path = db_path + "/" + package_name + "/" + table_name + "/" + file_name;
 	string path = db_path + "/" + package_name + "/" + table_name;
-	if (file_exists(full_path))
+	if (file_possible(full_path))
 	{
+		table* tbl = query_table(package_name, table_name);
+		file* file = tbl->find_file(file_name);
+		for (size_t x = 0; x < _files.size(); ++x)
+		{
+			if (_files[x]->get_name() == file_name)
+			{
+				_files.erase(_files.begin() + x);
+			}
+		}
 		delete_file(path, file_name);
+		tbl->remove_file(file_name);
+		delete file;
 		return true;
 	}
 	else
 	{
-		cout << "[HuskyDB] Error: " << full_path << " is not a valid directory." << std::endl;
 		return false;
-	}
-
-	return false;
+	} return false;
 }
 
 // PRIVATE INTERNAL FUNCTIONS
 
 
 // Checks if a folder already exists
-bool huskydb::folder_exists(string &directory)
+bool huskydb::folder_possible(string &directory)
 {
 	DWORD ftyp = GetFileAttributesA(directory.c_str());
 	if (ftyp == INVALID_FILE_ATTRIBUTES)
 	{
-		cout << "[HuskyDB] Error: " << directory << " is not a valid directory." << std::endl;
 		return false;
 	}
 
 	if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
 	{
 		return true;
-	}
-
-	cout << "[HuskyDB] Error: " << directory << " is not a valid directory." << std::endl;
-	return false;
+	} return false;
 }
 
 // Checks if a file already exists
-bool huskydb::file_exists(string &directory)
+bool huskydb::file_possible(string &directory)
 {
 	ifstream dir(directory);
 	if (!dir)
@@ -278,8 +368,8 @@ vector<string> huskydb::get_files(string &directory, string &extension)
 bool huskydb::make_folder(string &directory, string &folder_name)
 {
 	string path = directory + "/" + folder_name;
-	bool response = folder_exists(path);
-	if (response)
+	bool response = folder_possible(path);
+	if (!response)
 	{
 		fs::create_directory(path);
 		//index();
@@ -288,7 +378,7 @@ bool huskydb::make_folder(string &directory, string &folder_name)
 	}
 	else
 	{
-		cout << "[HuskyDB] Error: " << path << " already exists." << endl;
+		cout << "[HuskyDB] Warning: " << path << " already exists." << endl;
 		return false;
 	}
 
