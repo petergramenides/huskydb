@@ -24,55 +24,50 @@ namespace fs = std::experimental::filesystem;
 // PUBLIC FUNCTIONS
 
 // Index database in memory
-void huskydb::index(string cmd)
+void huskydb::index()
 {
 	using namespace std::chrono;
 
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
-
-	if (cmd == "init") 
+	vector<string> package_names = get_folders(db_path);
+	for (size_t x = 0; x < package_names.size(); ++x)
 	{
-		vector<string> package_names = get_folders(db_path);
-		for (size_t x = 0; x < package_names.size(); ++x)
+		vector<table*> pkg_tables;
+		string path = db_path + "/" + package_names[x];
+		package* pkg = new package(package_names[x], path, empty_tables);
+		vector<string> tables = get_folders(path);
+
+		for (size_t y = 0; y < tables.size(); ++y)
 		{
-			vector<table*> pkg_tables;
-			string path = db_path + "/" + package_names[x];
-			package* pkg = new package(package_names[x], path, empty_tables);
-			vector<string> tables = get_folders(path);
+			string table_path = path + "/" + tables[y];
+			vector<string> files = get_files(table_path);
 
-			for (size_t y = 0; y < tables.size(); ++y)
-			{
-				string table_path = path + "/" + tables[y];
-				vector<string> files = get_files(table_path);
-
-				table* tbl = new table(tables[y], table_path, pkg, empty_files);
-				vector<file*> table_files;
+			table* tbl = new table(tables[y], table_path, pkg, empty_files);
+			vector<file*> table_files;
 				
-				for (size_t z = 0; z < files.size(); ++z)
-				{
-					string file_path = table_path + "/" + files[z];
-					file* fl = new file(files[z], file_path, 0, tbl);
-					table_files.push_back(fl);
-					_files.push_back(fl);
-				}
-
-				tbl->set_child(table_files);
-				pkg_tables.push_back(tbl);
-				_tables.push_back(tbl);
+			for (size_t z = 0; z < files.size(); ++z)
+			{
+				string file_path = table_path + "/" + files[z];
+				file* fl = new file(files[z], file_path, 0, tbl);
+				table_files.push_back(fl);
+				_files.push_back(fl);
 			}
 
-			pkg->set_tables(pkg_tables);
-			_packages.push_back(pkg);
+			tbl->set_child(table_files);
+			pkg_tables.push_back(tbl);
+			_tables.push_back(tbl);
 		}
-	}
 
-	
+		pkg->set_tables(pkg_tables);
+		_packages.push_back(pkg);
+	}
 
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	auto duration = duration_cast<microseconds>(t2 - t1).count();
-
-	cout << _packages.size() << " " << _tables.size() << " " << _files.size() << endl;
-	cout << "Duration = " << duration << endl;
+	cout << "[HuskyDB] Database indexed in " << duration << "ms." << endl;
+	cout << "[HuskyDB] # of packages: " << _packages.size() << endl;
+	cout << "[HuskyDB] # of tables: " << _tables.size() << endl;
+	cout << "[HuskyDB] # of files: " << _files.size() << endl;
 }
 
 // Make package

@@ -49,7 +49,7 @@ public:
 		{
 			cout << "[HuskyDB] Starting HuskyDB - NoSQL database." << endl;
 			db_path = input_path;
-			index("init");
+			index();
 		}
 		else {
 			cout << "[HuskyDB] Directory " << input_path << " is not valid." << endl;
@@ -66,11 +66,32 @@ public:
 	// Deconstruct NoSQL database
 	~huskydb() 
 	{
-		//TODO
+		// Delete all file objects from memory
+		for (size_t x = 0; x < _files.size(); ++x)
+		{
+			delete _files[x];
+		}
+
+		// Delete all table objects from memory
+		for (size_t x = 0; x < _tables.size(); ++x)
+		{
+			delete _tables[x];
+		}
+
+		// Delete all package objects from memory
+		for (size_t x = 0; x < _packages.size(); ++x)
+		{
+			delete _packages[x];
+		}
+
+		// Clear pointers
+		_files.clear();
+		_tables.clear();
+		_packages.clear();
 	}
 
 	// Index database in memory
-	void index(string cmd);
+	void index();
 
 	// Make package
 	bool make_package(string package_name);
