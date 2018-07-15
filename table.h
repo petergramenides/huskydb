@@ -31,50 +31,60 @@ class package;
 class table
 {
 public:
-	table(string _fname, string _fpath, package* _parent, vector<file*> _child)
+	table(string _fname, string _fpath, package* _package, vector<file*> _docs)
 	{
 		folder_name = _fname;
 		folder_path = _fpath;
-		parent = _parent;
-		child = _child;
+		package = _package;
+		docs = _docs;
 	}
 	friend class huskydb;
 	friend class package;
 	friend class file;
 	~table()
 	{
-		for (size_t x = 0; x < child.size(); ++x)
+		for (size_t x = 0; x < docs.size(); ++x)
 		{
-			delete child[x];
-		} child.clear();
+			delete docs[x];
+		} docs.clear();
 	}
 	string get_name() { return folder_name; }
 	void set_name(string _name) { folder_name = _name; }
 	string get_path() { return folder_path; }
 	void set_path(string _path) { folder_path = _path; }
-	package* get_parent() { return parent; }
-	void set_parent(package* _parent) { parent = _parent; }
-	vector<file*> get_child() { return child; }
-	void set_child(vector<file*> _child) { child = _child; }
-	void add_file(file* file) { child.push_back(file); }
+	package* get_package() { return package; }
+	void set_package(package* _package) { package = _package; }
+	vector<file*> get_file() { return docs; }
+	void set_files(vector<file*> _docs) { docs = _docs; }
+	void add_file(file* file) { docs.push_back(file); }
 	vector<file*> find_file(size_t priority)
 	{
 		vector<file*> matches;
-		for (size_t x = 0; x < child.size(); ++x)
+		for (size_t x = 0; x < docs.size(); ++x)
 		{
-			if (child[x]->get_priority() == priority)
+			if (docs[x]->get_priority() == priority)
 			{
-				matches.push_back(child[x]);
+				matches.push_back(docs[x]);
 			} return matches;
+		}
+	}
+	void remove_file(string file_name)
+	{
+		for (size_t x = 0; x < docs.size(); ++x)
+		{
+			if (docs[x]->file_name == file_name)
+			{
+				docs.erase(docs.begin() + x);
+			}
 		}
 	}
 	file* find_file(string name_)
 	{
-		for (size_t x = 0; x < child.size(); ++x)
+		for (size_t x = 0; x < docs.size(); ++x)
 		{
-			if (child[x]->get_name() == name_)
+			if (docs[x]->get_name() == name_)
 			{
-				return child[x];
+				return docs[x];
 			}
 		} return nullptr;
 	}
@@ -82,8 +92,8 @@ public:
 private:
 	string folder_name;
 	string folder_path;
-	package* parent;
-	vector<file*> child;
+	package* package;
+	vector<file*> docs;
 
 };
 

@@ -62,6 +62,7 @@ public:
 	}
 	string get_name() { return package_name; }
 	void set_name(string _name) { package_name = _name; }
+	void add_table(table* _table) { tables.push_back(_table); }
 
 private:
 	string package_path;

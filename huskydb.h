@@ -45,7 +45,7 @@ public:
 	// Initialize NoSQL database
 	huskydb(string input_path)
 	{
-		if (folder_exists(input_path))
+		if (folder_possible(input_path))
 		{
 			cout << "[HuskyDB] Starting HuskyDB - NoSQL database." << endl;
 			db_path = input_path;
@@ -93,14 +93,23 @@ public:
 	// Index database in memory
 	void index();
 
+	// Find package by name
+	package* query_package(string package_name);
+
+	// Find table through table name
+	table* query_table(string table_name);
+
+	// Find table through multiple parameters
+	table* query_table(string table_name, string package_name);
+
 	// Make package
 	bool make_package(string package_name);
 
 	// Make table
 	bool make_table(string package_name, string table_name);
 
-	// Make normal file from string
-	bool make_file(string package_name, string table_name, string file_name, string data);
+	// Make priority file from string
+	bool make_file(string package_name, string table_name, string file_name, string data, size_t priority);
 
 	// Append data to file from string (can be used for large files)
 	bool append_file(string package_name, string table_name, string file_name, vector<string> data);
@@ -151,10 +160,10 @@ private:
 	// INTERNAL FUNCTION DECLARATIONS
 
 	// Check if folder exists
-	bool folder_exists(string &directory);
+	bool folder_possible(string &directory);
 
 	// Check if file exists
-	bool file_exists(string &directory);
+	bool file_possible(string &directory);
 
 	// Get elements in directory based on abstract (file or folder)
 	void get_elements(vector<string> &files, string &search_path, string abstract);
