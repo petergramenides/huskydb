@@ -37,26 +37,26 @@ Making a game? All of your assets management can be instantly handled by HuskyDB
 #include "huskydb.h"
 
 // Starting the database
-huskydb db = huskydb("/path/to/db");
+CHuskyDB db = CHuskyDB("/path/to/db");
 
 // Making a package
-db.make_package("maps");
+db.MakePackage("maps");
 
 // Making a table
-db.make_table("maps", "world-01");
+db.MakeTable("maps", "world-01");
 
 // Adding a file from a C++ object to the table
-db.make_entry("maps", "world-01", "level.json", data);
+db.MakeEntry("maps", "world-01", "level.json", data);
 ```
 
 ### Querying
 
 ```
 // Get specific table from package
-table* tbl = db.query_tables("maps", "world-01");
+CTable* tbl = db.QueryTables("maps", "world-01");
 
 // Get files in table
-vector<file*> files = tbl->get_files();
+vector<CFile*> files = tbl->GetFiles();
 
 ```
 
@@ -65,7 +65,7 @@ vector<file*> files = tbl->get_files();
 You can automate your entity-loading with our prioritization features! To enable, just do the following on startup:
 
 ```
-huskydb("/path/to/db", true);
+CHuskyDB("/path/to/db", true);
 ```
 
 "priority" files will be generated in all file folders. Add the following to these files to configure priority values:
