@@ -28,6 +28,8 @@ void huskydb::index(string cmd)
 {
 	using namespace std::chrono;
 
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
 	if (cmd == "init") 
 	{
 		vector<string> package_names = get_folders(db_path);
@@ -36,7 +38,7 @@ void huskydb::index(string cmd)
 			vector<table*> pkg_tables;
 			string path = db_path + "/" + package_names[x];
 			package* pkg = new package(package_names[x], path, empty_tables);
-			vector<string> tables = get_files(path);
+			vector<string> tables = get_folders(path);
 
 			for (size_t y = 0; y < tables.size(); ++y)
 			{
@@ -65,11 +67,12 @@ void huskydb::index(string cmd)
 	}
 
 	
-	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	auto duration = duration_cast<microseconds>(t2 - t1).count();
 
+	cout << _packages.size() << " " << _tables.size() << " " << _files.size() << endl;
+	cout << "Duration = " << duration << endl;
 }
 
 // Make package
