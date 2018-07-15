@@ -1,4 +1,4 @@
-<img src="https://github.com/petergramenides/huskydb/blob/master/huskydb-logo.png" width="250">
+<img src="https://github.com/petergramenides/huskydb/blob/master/img/huskydb-logo.png?raw=true" width="250">
 
 ## Introduction
 
@@ -78,6 +78,13 @@ adding the ability to have this done without restarting the database.
 
 Note: For scaling applications, prioritization slows the startup process by ~600ms. It does not slow the database
 after startup. If you do not want this feature, it is disabled by default.
+
+## Database Structure
+
+HuskyDB was designed with a very specific data management model. Many NoSQL databases are very unstructured, leading to decreased query times. HuskyDB adopts a hybrid model, we utilize a custom hierarchical structure to maximize query speeds and minimize transition from
+conventional RDBMS SQL-based databases.
+
+<img src="https://github.com/petergramenides/huskydb/blob/master/img/huskydb-structure.JPG?raw=true" width="500">
 
 ## Additional Information
 
