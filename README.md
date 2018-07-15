@@ -88,7 +88,7 @@ conventional RDBMS SQL-based databases.
 
 ## Additional Information
 
-You can read our entire documentation [here](https://github.com/petergramenides/huskydb/wiki/Documentation).
+You can read our entire documentation [here](https://github.com/petergramenides/huskydb/tree/master/documentation).
 
 Want to contribute or make a suggestion? Send me an email at gramep@rpi.edu!
 
