@@ -90,8 +90,7 @@ conventional RDBMS SQL-based databases.
 
 You can read our entire documentation [here](https://github.com/petergramenides/huskydb/wiki/Documentation).
 
-Want to contribute? Send me an email at gramep@rpi.edu! Or, just make a
-branch and a pull request and our team will review it.
+Want to contribute or make a suggestion? Send me an email at gramep@rpi.edu!
 
 ## Future Updates
 
