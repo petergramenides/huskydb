@@ -199,7 +199,7 @@ bool huskydb::delete_package(string package_name)
 					}
 				}
 
-			} tables.clear();
+			}
 		}
 
 		for (size_t x = 0; x < _packages.size(); ++x)
@@ -228,7 +228,6 @@ bool huskydb::delete_table(string package_name, string table_name)
 	if (folder_possible(path))
 	{
 		package* pkg = query_package(package_name);
-		cout << table_name << endl;
 		pkg->remove_table(table_name);
 
 		for (size_t x = 0; x < _tables.size(); ++x)
@@ -254,7 +253,6 @@ bool huskydb::delete_table(string package_name, string table_name)
 // Delete individual file
 bool huskydb::delete_file(string package_name, string table_name, string file_name)
 {
-	cout << file_name << endl;
 	string full_path = db_path + "/" + package_name + "/" + table_name + "/" + file_name;
 	string path = db_path + "/" + package_name + "/" + table_name;
 	if (file_possible(full_path))
