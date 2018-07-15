@@ -8,7 +8,7 @@ int main()
 	cout << "[HuskyDB] Starting database verification test." << endl;
 
 	// Initialize database
-	huskydb db = huskydb("C:/Users/Owner/Desktop/VS-Huskydb/database");
+	huskydb db = huskydb("/path/to/db");
 
 	// Make package in database
 	db.make_package("test");
@@ -46,8 +46,6 @@ int main()
 
 	// Delete file from database
 	//db.delete_file("package", "images", "test.png");
-
-	//cout << "Is this working?" << endl;
 
 	cin.get();
 }
