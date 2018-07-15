@@ -123,7 +123,7 @@ table* huskydb::query_table(string table_name)
 return nullptr;
 }
 
-table* huskydb::query_table(string table_name, string package_name)
+table* huskydb::query_table(string package_name, string table_name)
 {
 	package* pkg = query_package(package_name);
 	table* table = pkg->find_table(table_name);
