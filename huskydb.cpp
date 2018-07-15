@@ -18,6 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "huskydb.h"
+#include "prioritzation_parser.h"
 
 namespace fs = std::experimental::filesystem;
 
