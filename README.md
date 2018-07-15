@@ -77,7 +77,7 @@ Be sure to restart the database after making changes to the priority files. In c
 adding the ability to have this done without restarting the database.
 
 Note: For scaling applications, prioritization slows the startup process by ~600ms. It does not slow the database
-after startup. If you do not want this feature, it is disabled by default.
+after startup.
 
 ## Database Structure
 
