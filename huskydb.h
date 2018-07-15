@@ -1,8 +1,10 @@
+#ifndef HUSKYDB_H
+#define HUSKYDB_H
 /*Copyright(C)2018 by Peter C. Gramenides
 
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files(the "Software"), to deal 
-in the Software without restriction, including without l> imitation the rights 
+in the Software without restriction, including without limitation the rights 
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
 of the Software, and to permit persons to whom the Software is furnished to do so, 
 subject to the following conditions :
@@ -28,7 +30,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <stdio.h>
 #include <direct.h>
 #include <ios>
+#include <chrono>
 #include <experimental/filesystem>
+
+#include "package.h"
+#include "table.h"
+#include "file.h"
 using namespace std;
 
 class huskydb
@@ -40,59 +47,51 @@ public:
 	{
 		if (folder_exists(input_path))
 		{
-			cout << "[HuskyDB] Starting HuskyDB - NoSQL database.";
+			cout << "[HuskyDB] Starting HuskyDB - NoSQL database." << endl;
 			db_path = input_path;
-			index();
+			index("init");
 		}
 		else {
-			cout << "[HuskyDB] Directory " << input_path << "is not valid.";
-			cout << "[HuskyDB] Shutting down database.";
+			cout << "[HuskyDB] Directory " << input_path << " is not valid." << endl;
+			cout << "[HuskyDB] Shutting down database." << endl;
+			Sleep(5000);
 			exit(EXIT_FAILURE);
 		}
 	}
 
+	friend class package;
+	friend class table;
+	friend class file;
+
 	// Deconstruct NoSQL database
-	~huskydb()
+	~huskydb() 
 	{
-		db_path.clear();
-		_packages.clear();
-		_tables.clear();
-		packages_tables.clear();
-		tables_files.clear();
+		//TODO
 	}
 
 	// Index database in memory
-	void index();
-
-	// Get names of all packages from database
-	vector<string> query_packages() { index(); return _packages; }
-
-	// Get tables from database in package
-	vector<string> query_tables(string &package);
-
-	// Get files and priorities from package and/or table
-	unordered_map<string, char> query_files(string &package, string &table);
+	void index(string cmd);
 
 	// Make package
-	char make_package(string &package_name);
+	bool make_package(string package_name);
 
 	// Make table
-	char make_table(string &package_name, string &table_name);
+	bool make_table(string package_name, string table_name);
 
 	// Make normal file from string
-	char make_file(string &package_name, string &table_name, string &file_name, string &data);
+	bool make_file(string package_name, string table_name, string file_name, string data);
 
 	// Append data to file from string (can be used for large files)
-	char append_file(string &package_name, string &table_name, string &file_name, vector<string> &data);
+	bool append_file(string package_name, string table_name, string file_name, vector<string> data);
 	
 	// Delete package if it exists including all content (tables, files, etc.)
-	char delete_package(string &package_name);
+	bool delete_package(string package_name);
 
 	// Delete table if it exists including all content
-	char delete_table(string &package_name, string &table_name);
+	bool delete_table(string package_name, string table_name);
 
 	// Delete individual file
-	char delete_file(string &package_name, string &table_name, string &file_name);
+	bool delete_file(string package_name, string table_name, string file_name);
 
 	// WARNING: Dumping all data is not recommended
 	// Uncomment to allow this functionality
@@ -119,30 +118,22 @@ private:
 	// Location of top level of the database
 	string db_path;
 
-	// List of all packages
-	vector<string> _packages;
+	// Used as null output
+	vector<table*> empty_tables;
+	vector<file*> empty_files;
 
-	// List of all tables
-	vector<string> _tables;
-
-	// List of all files
-	vector<string> _files;
-
-	// Data representation of tables in packages
-	// Structure: <package_name, tables>
-	unordered_map<string, vector<string>> packages_tables;
-
-	// Data representation of files in tables
-	// Structure: <package_name-table_name, <document_name, priority>>
-	unordered_map<string, unordered_map<string, char> > tables_files;
+	// All data
+	vector<package*> _packages;
+	vector<table*> _tables;
+	vector<file*> _files;
 
 	// INTERNAL FUNCTION DECLARATIONS
 
 	// Check if folder exists
-	char folder_exists(string &directory);
+	bool folder_exists(string &directory);
 
 	// Check if file exists
-	char file_exists(string &directory);
+	bool file_exists(string &directory);
 
 	// Get elements in directory based on abstract (file or folder)
 	void get_elements(vector<string> &files, string &search_path, string abstract);
@@ -157,11 +148,13 @@ private:
 	vector<string> get_files(string &directory, string &extension);
 
 	// Make folder in directory if it does not exist
-	char make_folder(string &directory, string &folder_name);
+	bool make_folder(string &directory, string &folder_name);
 
 	// Recursively delete folder if it exists
-	char delete_folder(string &directory);
+	bool delete_folder(string &directory);
 
 	// Delete file if it exists
-	char delete_file(string &directory, string &file_name);
+	bool delete_file(string &directory, string &file_name);
 };
+
+#endif
