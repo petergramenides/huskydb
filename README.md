@@ -60,11 +60,25 @@ vector<file*> files = tbl->get_files();
 
 ```
 
+## Priority Loading
+
+You can automate your entity-loading with our prioritization features! To enable, just do the following on startup:
+
+```
+huskydb("/path/to/db", true);
+```
+
+"priority" files will be generated in all file folders. Add the following to these files to configure priority values:
+
+```
+file_name.xxx=#;
+```
+
 ## Additional Information
 
 You can read our entire documentation [here](https://github.com/petergramenides/huskydb/wiki/Documentation).
 
-Want to contribute? Send me and email at gramep@rpi.edu! Or, just make a
+Want to contribute? Send me an email at gramep@rpi.edu! Or, just make a
 branch and a pull request and our team will review it.
 
 ## Future Updates
@@ -79,3 +93,7 @@ following updates soon:
 * Security features
 * Mac & Linux native builds
 * Docker container
+
+## Special Thanks
+
+Daniel Parente: For working with me late at night to concepualize, build, and debug HuskyDB.
