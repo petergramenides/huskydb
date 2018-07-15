@@ -84,7 +84,8 @@ after startup. If you do not want this feature, it is disabled by default.
 HuskyDB was designed with a very specific data management model. Many NoSQL databases are very unstructured, leading to decreased query times. HuskyDB adopts a hybrid model, we utilize a custom hierarchical structure to maximize query speeds and minimize transition from
 conventional RDBMS SQL-based databases.
 
-<img src="https://github.com/petergramenides/huskydb/blob/master/img/huskydb-structure.JPG?raw=true" width="500">
+<img src="https://github.com/petergramenides/huskydb/blob/master/img/huskydb-structure.JPG?raw=true" width="500" style="display: block;
+    margin: 0 auto;">
 
 ## Additional Information
 
