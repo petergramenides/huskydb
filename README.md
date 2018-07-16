@@ -11,7 +11,7 @@ HuskyDB is:
 - **lightweight:** HuskyDB was built to maximize efficiency and size. HuskyDB is 
 one of the smallest and fastest NoSQL databases (~1200 lines code).
 
-- ** super-fast** Need your database indexed in a few microseconds? HuskyDB offers a linear time complexity and only takes
+- **super-fast** Need your database indexed in a few microseconds? HuskyDB offers a linear time complexity and only takes
 approximately 20 microseconds per file when indexing your database. We plan on improving this speed even more!
 
 - **document oriented:** Inspired by [TinyDB](https://github.com/msiemens/tinydb), HuskyDB is document oriented and can store
