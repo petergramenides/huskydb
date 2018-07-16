@@ -79,9 +79,6 @@ file_name.xxx=#;
 Be sure to restart the database after making changes to the priority files. In consecutive releases, we will be
 adding the ability to have this done without restarting the database.
 
-Note: For scaling applications, prioritization slows the startup process by ~600ms. It does not slow the database
-after startup.
-
 ## Database Structure
 
 HuskyDB was designed with a very specific data management model. Many NoSQL databases are very unstructured, leading to increased query times. HuskyDB adopts a hybrid model, we utilize a custom hierarchical structure to maximize query speeds and minimize transition from
