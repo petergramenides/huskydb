@@ -161,7 +161,7 @@ void CHuskyDB::Index(bool toggle_pr)
 
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	auto duration = duration_cast<microseconds>(t2 - t1).count();
-	cout << "[HuskyDB] Database indexed in " << duration << "ms." << endl;
+	cout << "[HuskyDB] Database indexed in " << duration << " microseconds." << endl;
 	cout << "[HuskyDB] # of packages: " << m_Packages.size() << endl;
 	cout << "[HuskyDB] # of tables: " << m_Tables.size() << endl;
 	cout << "[HuskyDB] # of files: " << m_Files.size() << endl;
