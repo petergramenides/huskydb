@@ -22,7 +22,7 @@ not exist, the database will thrown an error and exit.
 // Initialize NoSQL database
 CHuskyDB(string input_path);
 ```
-
+======
 ***Description:*** Initializes the NoSQL database from the provided path
 stored as a string primitive. If the database location does
 not exist, the database will thrown an error and exit.
@@ -37,7 +37,7 @@ directories.
 // Initialize NoSQL database (with prioritization setting)
 CHuskyDB(string input_path, bool toggle_pr);
 ```
-
+======
 ### Indexing
 
 ***Description:*** Indexes the packages, tables, and files in the database and stores them into different class structures: CPackage, CTable, and CFile.
@@ -48,7 +48,7 @@ CHuskyDB(string input_path, bool toggle_pr);
 // Index database in memory
 void					Index(bool toggle_pr);
 ```
-
+======
 ### Querying
 
 ***Description:*** Returns a package if its name matches that of the provided `package_name` variable. Throws `nullptr` if no match is found.
@@ -59,7 +59,7 @@ void					Index(bool toggle_pr);
 // Find package by name
 CPackage*				QueryPackage(string package_name);
 ```
-
+======
 ***Description:*** Returns a table if its name matches that of the provided `table_name` variable. 
 
 ***Argument:*** Name of the table you want to find represented by a string primitive.
@@ -69,7 +69,7 @@ CPackage*				QueryPackage(string package_name);
 // Find table through table name
 CTable*					QueryTable(string table_name);
 ```
-
+======
 ***Description:*** Returns a table if its name matches that of the provided `table_name` variable and the `package_name` variable.
 
 ***Argument:*** Name of the table and package you want to find represented by string primitives.
@@ -80,7 +80,7 @@ CTable*					QueryTable(string table_name);
 // Find table through multiple parameters
 CTable*					QueryTable(string table_name, string package_name);
 ```
-
+======
 ### Make Elements
 
 ***Description:*** Makes a package folder and returns a boolean value representing the status of the package.
@@ -93,7 +93,7 @@ CTable*					QueryTable(string table_name, string package_name);
 // Make package
 bool					MakePackage(string package_name);
 ```
-
+======
 ***Description:*** Makes a table folder within a package and retuns a boolean value representing the status of the table.
 
 ***Argument:*** The name of the package you want the table to be created in and the name of the table represented as string primitives.
@@ -104,7 +104,7 @@ bool					MakePackage(string package_name);
 // Make table
 bool					MakeTable(string package_name, string table_name);
 ```
-
+======
 ***Description:*** Makes a file entry within a table and retuns a boolean value representing the status of the file.
 
 ***Argument:*** The name of the package and table you want the file to be contained in as well as the name of the file, the contents of the file represented as a string, and the priority value (set to zero if priority is disabled).
@@ -115,7 +115,7 @@ bool					MakeTable(string package_name, string table_name);
 // Make priority file from string
 bool					MakeFile(string package_name, string table_name, string file_name, string data, size_t priority);
 ```
-
+======
 ### Append File
 
 ***Description:*** Appends to a file entry within a table and retuns a boolean value representing the status of the file.
@@ -128,7 +128,7 @@ bool					MakeFile(string package_name, string table_name, string file_name, stri
 // Append data to file from string (can be used for large files)
 bool					AppendFile(string package_name, string table_name, string file_name, vector<string> data);
 ```
-
+======
 ### Delete Elements
 
 ***Description:*** Deletes a package and retuns a boolean value representing the status of the deletion.
@@ -141,7 +141,7 @@ bool					AppendFile(string package_name, string table_name, string file_name, ve
 // Delete package if it exists including all content (tables, files, etc.)
 bool					DeletePackage(string package_name);
 ```
-
+======
 ***Description:*** Delete a table with a package and retuns a boolean value representing the status of the deletion.
 
 ***Arguments:*** The name of the package that keeps the table and the name of the table you wish to delete represented as string primitives.
@@ -152,7 +152,7 @@ bool					DeletePackage(string package_name);
 // Delete table if it exists including all content
 bool					DeleteTable(string package_name, string table_name);
 ```
-
+======
 ***Description:*** Delete a file entry contained within a table and package and retuns a boolean value representing the status of the deletion.
 
 ***Arguments:*** The name of the package and table that keep the file as well as the name of the file represented as string primitives.
